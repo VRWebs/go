@@ -1,0 +1,11 @@
+#Implement Scikit learn package on iris data set. 
+
+from sklearn.datasets import load_iris 
+# Load the Iris dataset 
+iris = load_iris() 
+# Print the feature data 
+print("Feature Data (X):") 
+print(iris.data) 
+# Print the target labels 
+print("\nTarget Labels (y):") 
+print(iris.target) 
