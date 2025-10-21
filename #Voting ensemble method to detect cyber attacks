@@ -1,23 +1,24 @@
 #Voting ensemble method to detect cyber attacks. 
 
-import pandas as pd 
-from sklearn.model_selection import train_test_split 
-from sklearn.preprocessing import StandardScaler 
-from sklearn.linear_model import LogisticRegression 
-from sklearn.ensemble import RandomForestClassifier, VotingClassifier 
-from sklearn.metrics import accuracy_score 
-data = pd.DataFrame(
-"duration": [10, 5, 20, 50, 2, 80], 
-"packets": [100, 50, 200, 800, 20, 1000], 
-"bytes":   [500, 200, 1000, 4000, 100, 6000], 
-"label":   [0, 0, 1, 1, 0, 1]   # 0 = normal, 1 = attack}) 
-X = data.drop("label", axis=1) 
-y = data["label"] 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42) 
-model1 = LogisticRegression() 
-model2 = RandomForestClassifier() 
-ensemble = VotingClassifier(estimators=[("lr", model1), ("rf", model2)],voting="hard") 
-ensemble.fit(X_train, y_train) 
-y_pred = ensemble.predict(X_test) 
-print("Accuracy:", accuracy_score(y_test, y_pred)) 
-print("Predictions:", y_pred))
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier, VotingClassifier
+from sklearn.metrics import accuracy_score
+
+data = pd.DataFrame({
+    "duration":[10,5,20,50,2,80],
+    "packets":[100,50,200,800,20,1000],
+    "bytes":[500,200,1000,4000,100,6000],
+    "label":[0,0,1,1,0,1]
+})
+
+X_train,X_test,y_train,y_test = train_test_split(
+    data.drop("label",1), data["label"], test_size=0.3, random_state=42)
+
+model = VotingClassifier([
+    ("lr", LogisticRegression()), 
+    ("rf", RandomForestClassifier())
+], voting="hard").fit(X_train,y_train)
+
+print("Accuracy:", accuracy_score(y_test, model.predict(X_test)))
